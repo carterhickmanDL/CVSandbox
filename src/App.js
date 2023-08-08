@@ -11,7 +11,7 @@ import * as tf from "@tensorflow/tfjs";
 import * as handpose from "@tensorflow-models/handpose";
 import Webcam from "react-webcam";
 import "./App.css";
-import { drawHand, squishCheck, dragBox } from './utilities';
+import { drawHand, squishCheck, dragBox, insideBoundsCheck } from './utilities';
 import Box from './Box';
 
 import { squishGesture } from "./Squish";
@@ -96,10 +96,14 @@ function App() {
       // This is essentially our loop
       const ctx = canvasRef.current.getContext("2d");
       drawHand(hand, ctx, currentEmoji);
-      squishCheck();
-      if (Box.dragReady){
-        dragBox();
+       if (currentEmoji === 'victory'){
+        //squishCheck();
+        insideBoundsCheck();
+        if (Box.dragReady){
+          dragBox();
+        } 
       }
+      
       Box.drawBox(ctx);
     }
   };

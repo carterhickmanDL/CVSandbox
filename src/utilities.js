@@ -1,10 +1,9 @@
 
-//import { start } from 'repl';
 import Box from './Box';
 
 let dragReady = false;
-const startLandmark = new Array(0,0); //purple, this is thumb
-const endLandmark = new Array(0,0); //green, this is index 
+const startLandmark = new Array(0,0); //green, this is thumb, 8
+const endLandmark = new Array(0,0); //red, this is index, 12
 
 // Points for fingers
 const fingerJoints = {
@@ -29,7 +28,7 @@ const style = {
   9: { color: "gold", size: 10 },
   10: { color: "gold", size: 6 },
   11: { color: "gold", size: 6 },
-  12: { color: "gold", size: 6 },
+  12: { color: "red", size: 6 },
   13: { color: "gold", size: 10 },
   14: { color: "gold", size: 6 },
   15: { color: "gold", size: 6 },
@@ -43,7 +42,7 @@ const style = {
 export function squishCheck(){
   let paddingConstant = 30;
   //Check if we're squishing
-  if ((Math.abs(startLandmark[0] - endLandmark[0]) < 50) && (Math.abs(startLandmark[1] - endLandmark[1]) < 50)){
+  if ((Math.abs(startLandmark[0] - endLandmark[0]) < 30) && (Math.abs(startLandmark[1] - endLandmark[1]) < 30)){
     
     //Check if we're initiating drag
       if (startLandmark[0] > (Box.x - paddingConstant) && startLandmark[0] < (Box.x + Box.width + paddingConstant)){
@@ -65,21 +64,47 @@ export function squishCheck(){
 
 };
 
+export function insideBoundsCheck(){
+
+  if (startLandmark[0] >= Box.x && startLandmark[0] <= (Box.x + Box.width)){
+    if (startLandmark[1] >= Box.y && startLandmark[1] <= (Box.y + Box.height)){
+      if (endLandmark[0] >= Box.x && endLandmark[0] <= (Box.x + Box.width)){
+        if (endLandmark[1] >= Box.y && endLandmark[1] <= (Box.y + Box.height)){
+          Box.dragReady = true;
+          Box.color = 'green';
+        }
+        else {
+          Box.dragReady = false;
+          Box.color = 'red';
+        }
+      }
+    }
+  }
+  
+
+};
+
 export function dragBox(){
-  Box.x = (startLandmark[0] + endLandmark[0]) / 2;
-  Box.y = (startLandmark[1] + endLandmark[1]) / 2;
-  if (Box.x > 1000) {
-    Box.x = 1000;
-  }
-  if (Box.x < 200) {
-    Box.x = 200;
-  }
-  if (Box.y > 1000) {
-    Box.y = 1000;
-  }
-  if (Box.y < 100) {
-    Box.y = 100;
-  }
+  
+  // Box.x = (startLandmark[0] + endLandmark[0]) / 2;
+  // Box.y = (startLandmark[1] + endLandmark[1]) / 2;
+  // if (Box.x > 400) {
+  //   Box.x = 400;
+  // }
+  // if (Box.x < 0) {
+  //   Box.x = 0;
+  // }
+  // if (Box.y > 300) {
+  //   Box.y = 300;
+  // }
+  // if (Box.y < 100) {
+  //   Box.y = 100;
+  // }
+
+  const middleX = (startLandmark[0] + endLandmark[0])/2;
+  const middleY = (startLandmark[1] + endLandmark[1])/2;
+  Box.x = middleX - (0.5 * Box.width);
+  Box.y = middleY - (0.5 * Box.height);
 
 }
 
@@ -144,24 +169,30 @@ export const drawHand = (predictions, ctx, emoji) => {
         ctx.fillStyle = style[i]["color"];
         ctx.fill();
         //console.log('emoji: ', emoji);
-        if (i === 4){
+        if (i === 8){
           startLandmark[0] = landmarks[i][0];
           startLandmark[1] = landmarks[i][1];
+
         }
-        else if (i === 8){
+        else if (i === 12){
           endLandmark[0] = landmarks[i][0];
           endLandmark[1] = landmarks[i][1];
         };
       }
     });
   }
-  if (emoji === 'squish'){
-    ctx.beginPath();
-    ctx.strokeStyle = 'green';
-    ctx.lineWidth = 1;
-    ctx.rect(((startLandmark[0] + endLandmark[0])/2)+20, startLandmark[1], endLandmark[1] - startLandmark[1], endLandmark[1] - startLandmark[1]);
-    ctx.stroke();
-  }
+
+  //Draw box around fingers 
+
+  // if (emoji === 'victory'){
+  //   ctx.beginPath();
+  //   ctx.strokeStyle = 'green';
+  //   ctx.lineWidth = 1;
+  //   //start is green, end is red
+  //   //rect parameters
+  //   ctx.rect(startLandmark[0], startLandmark[1], endLandmark[0] - startLandmark[0], endLandmark[0] - startLandmark[0]);
+  //   ctx.stroke();
+  // }
 
 };
 
