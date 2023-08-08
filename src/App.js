@@ -21,7 +21,7 @@ import victory from "./victory.png";
 import thumbs_up from "./thumbs_up.png";
 import squish from "./squish.png";
 ///////// NEW STUFF IMPORTS
-
+  
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
