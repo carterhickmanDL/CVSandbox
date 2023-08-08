@@ -41,26 +41,47 @@ const style = {
 };
 
 export function squishCheck(){
-
-  if ((Math.abs(startLandmark[0] - endLandmark[0]) < 35) && (Math.abs(startLandmark[1] - endLandmark[1]) < 35)){
-    Box.x = (startLandmark[0] + endLandmark[0]) / 2;
-    Box.y = (startLandmark[1] + endLandmark[1]) / 2;
-    //console.log("here");
+  let paddingConstant = 30;
+  //Check if we're squishing
+  if ((Math.abs(startLandmark[0] - endLandmark[0]) < 50) && (Math.abs(startLandmark[1] - endLandmark[1]) < 50)){
+    
+    //Check if we're initiating drag
+      if (startLandmark[0] > (Box.x - paddingConstant) && startLandmark[0] < (Box.x + Box.width + paddingConstant)){
+        if (startLandmark[1] > (Box.y - paddingConstant) && startLandmark[1] < (Box.y + Box.height + paddingConstant)){
+          if (endLandmark[0] > (Box.x - paddingConstant) && endLandmark[0] < (Box.x + Box.width + paddingConstant)){
+            if (endLandmark[1] > (Box.y - paddingConstant) && endLandmark[1] < (Box.y + Box.height + paddingConstant)){
+              console.log("Drag Ready!");
+              Box.dragReady = true;
+              Box.color = "green";
+            }
+          }
+        }
+      }
+  } else {
+    console.log("Drag Not Ready!");
+    Box.dragReady = false;
+    Box.color = "red";
   }
 
-  // if (startLandmark[0] > Box.x && startLandmark[0] < (Box.x + Box.width)){
-  //   if (startLandmark[1] > Box.y && startLandmark[1] < (Box.y + Box.height)){
-  //     if (endLandmark[0] > Box.x && endLandmark[0] < (Box.x + Box.width)){
-  //       if (endLandmark[1] > Box.y && endLandmark[1] < (Box.y + Box.height)){
-  //       console.log("hoooo");
-
-        //Box.drawBox("red", ctx);
-  //      }
-  //     }
-  //   }
-  // }
-  //console.log("x: " startLandmark[0])
 };
+
+export function dragBox(){
+  Box.x = (startLandmark[0] + endLandmark[0]) / 2;
+  Box.y = (startLandmark[1] + endLandmark[1]) / 2;
+  if (Box.x > 1000) {
+    Box.x = 1000;
+  }
+  if (Box.x < 200) {
+    Box.x = 200;
+  }
+  if (Box.y > 1000) {
+    Box.y = 1000;
+  }
+  if (Box.y < 100) {
+    Box.y = 100;
+  }
+
+}
 
 
 const detectIntersection = () => {
@@ -151,7 +172,9 @@ function getBoxProperties() {
     x: Box.x,
     y: Box.y,
     width: Box.width,
-    height: Box.height
+    height: Box.height,
+    color: Box.color,
+    dragReady: Box.dragReady
   };
 }
 

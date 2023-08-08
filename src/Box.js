@@ -4,9 +4,11 @@ const Box = {
     y: 250, 
     width: 50,
     height: 50,
+    color: "red",            
+    dragReady: true,
 
-    drawBox: (color, ctx) => {
-        ctx.fillStyle = color;
+    drawBox: (ctx) => {
+        ctx.fillStyle = Box.color;
         ctx.fillRect(Box.x, Box.y, Box.width, Box.height);
     }
 };
